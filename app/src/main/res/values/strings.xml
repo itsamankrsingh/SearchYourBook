@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SearchYourBook</string>
+    <string name="search_books">Search Books</string>
+    <string name="search">Search</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="aman_kumar_singh">Aman Kumar Singh</string>
+</resources>
