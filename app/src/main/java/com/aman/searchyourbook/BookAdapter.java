@@ -19,18 +19,19 @@ import java.text.MessageFormat;
 import java.util.List;
 
 
-
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    public static final String TAG=BookAdapter.class.getSimpleName();
+    public static final String TAG = BookAdapter.class.getSimpleName();
 
     private List<BookItem> bookList;
-    private Context context;
+    private Context mContext;
+    private OnBookListener mOnBookListener;
 
 
-    public BookAdapter(List<BookItem> bookList, Context context) {
+    public BookAdapter(List<BookItem> bookList, Context context,OnBookListener onBookListener) {
         this.bookList = bookList;
-        this.context = context;
+        this.mContext = context;
+        this.mOnBookListener=onBookListener;
     }
 
 
@@ -38,7 +39,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,mOnBookListener);
     }
 
     @Override
@@ -49,12 +50,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         holder.textViewPublication.setText(MessageFormat.format("Publisher: {0}", book.getPublisher()));
 
         //Picasso.get().load(book.getImageResource()).fit().centerInside().into(holder.imageView);
-        Picasso.Builder builder = new Picasso.Builder(context);
+        Picasso.Builder builder = new Picasso.Builder(mContext);
         builder.listener(new Picasso.Listener() {
             @Override
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                Log.d("BookAdapter", "onImageLoadFailed: "+exception.getMessage());
-                Toast.makeText(context, "Error"+exception.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("BookAdapter", "onImageLoadFailed: " + exception.getMessage());
+                Toast.makeText(mContext, "Error" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         builder.build().load(book.getImageResource()).into(holder.imageView);
@@ -63,28 +64,42 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: "+bookList.size());
+        Log.d(TAG, "getItemCount: " + bookList.size());
         return bookList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView textViewTitle;
         public TextView textViewAuthor;
         public TextView textViewPublication;
         public ImageView imageView;
 
+        OnBookListener onBookListener;
 
-        public ViewHolder(@NonNull View itemView) {
+
+        public ViewHolder(@NonNull View itemView, OnBookListener onBookListener) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.txtTitle);
             textViewAuthor = itemView.findViewById(R.id.txtAuthor);
             textViewPublication = itemView.findViewById(R.id.txtPublisher);
-            imageView=itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.imageView);
+
+
+            this.onBookListener = onBookListener;
+            itemView.setOnClickListener(this);
 
 
         }
 
 
+        @Override
+        public void onClick(View v) {
+            onBookListener.OnBookClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnBookListener {
+        void OnBookClick(int position);
     }
 }

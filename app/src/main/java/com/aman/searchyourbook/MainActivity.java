@@ -27,11 +27,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BookAdapter.OnBookListener {
 
-    public static final String BOOK_NAME = "name";
+    public static final String BOOK_TITLE = "title";
     public static final String BOOK_AUTHOR = "author";
-    public static final String BOOK_URL = "url";
+    public static final String BOOK_IMAGE_RESOURCE = "url";
     public static final String BOOK_DESCRIPTION = "description";
     public static final String BOOK_PUBLISHER = "publisher";
 
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     bookDescription = volumeObject.getString("description");
 
                 } catch (Exception e) {
-                    Log.d(TAG, "showData: "+e.getMessage());
+                    Log.d(TAG, "showData: " + e.getMessage());
                 }
                 //put link string outside try catch of normal string
                 JSONObject imageObject = volumeObject.getJSONObject("imageLinks");
@@ -140,9 +140,26 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mAdapter = new BookAdapter(mBooks, MainActivity.this);
+        mAdapter = new BookAdapter(mBooks, MainActivity.this, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
 
+    @Override
+    public void OnBookClick(int position) {
+        Intent bookIntent = new Intent(MainActivity.this, DescriptionActivity.class);
+        BookItem bookClicked = mBooks.get(position);
+        bookIntent.putExtra(BOOK_TITLE, bookClicked.getTitle());
+        bookIntent.putExtra(BOOK_AUTHOR, bookClicked.getAuthor());
+        bookIntent.putExtra(BOOK_DESCRIPTION, bookClicked.getDescription());
+        bookIntent.putExtra(BOOK_IMAGE_RESOURCE, bookClicked.getImageResource());
+
+        startActivity(bookIntent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getSupportActionBar().setTitle(R.string.app_name);
+    }
 }

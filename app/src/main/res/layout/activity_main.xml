@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light"
+    android:background="@android:color/darker_gray"
     tools:context=".MainActivity">
 
 
@@ -31,7 +31,6 @@
         android:layout_margin="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-
         android:layout_marginRight="8dp"
         android:background="#ff0000"
         android:padding="8dp"

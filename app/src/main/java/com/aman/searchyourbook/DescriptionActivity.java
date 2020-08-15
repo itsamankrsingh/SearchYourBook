@@ -11,8 +11,9 @@ import com.squareup.picasso.Picasso;
 
 import static com.aman.searchyourbook.MainActivity.BOOK_AUTHOR;
 import static com.aman.searchyourbook.MainActivity.BOOK_DESCRIPTION;
-import static com.aman.searchyourbook.MainActivity.BOOK_NAME;
-import static com.aman.searchyourbook.MainActivity.BOOK_URL;
+import static com.aman.searchyourbook.MainActivity.BOOK_IMAGE_RESOURCE;
+import static com.aman.searchyourbook.MainActivity.BOOK_TITLE;
+
 
 public class DescriptionActivity extends AppCompatActivity {
 
@@ -21,12 +22,17 @@ public class DescriptionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
+
         Intent intent=getIntent();
 
-        String title=intent.getStringExtra(BOOK_NAME);
+        String title=intent.getStringExtra(BOOK_TITLE);
+
+        //change title of the app
+        getSupportActionBar().setTitle(title);
+
         String author=intent.getStringExtra(BOOK_AUTHOR);
         String description=intent.getStringExtra(BOOK_DESCRIPTION);
-        String imageResource=intent.getStringExtra(BOOK_URL);
+        String imageResource=intent.getStringExtra(BOOK_IMAGE_RESOURCE);
 
         TextView textViewTitle=findViewById(R.id.text_view_description_title);
         TextView textViewAuthor=findViewById(R.id.text_view_description_author);
