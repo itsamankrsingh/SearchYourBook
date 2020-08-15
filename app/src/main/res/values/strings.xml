@@ -4,4 +4,6 @@
     <string name="search">Search</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="aman_kumar_singh">Aman Kumar Singh</string>
+    <string name="title">Title:</string>
+    <string name="author">Author:</string>
 </resources>

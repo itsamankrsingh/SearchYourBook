@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +28,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String BOOK_NAME = "name";
+    public static final String BOOK_AUTHOR = "author";
+    public static final String BOOK_URL = "url";
+    public static final String BOOK_DESCRIPTION = "description";
+    public static final String BOOK_PUBLISHER = "publisher";
 
     private static final String TAG = "MainActivity";
 
@@ -67,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     //Log.d(TAG, "onClick: "+bookQuery);
                     //appending search query to the base url
                     String queryUrl = BASE_URL + bookQuery;
-                    Log.d(TAG, "onClick: " + queryUrl);
+                    //Log.d(TAG, "onClick: " + queryUrl);
                     mBooks.clear();
                     searchQuery(queryUrl);
                 }
@@ -78,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void searchQuery(String queryUrl) {
         mRequestQueue = Volley.newRequestQueue(this);
+        Log.d(TAG, "searchQuery: " + queryUrl);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 queryUrl,
                 null,
@@ -105,24 +113,29 @@ public class MainActivity extends AppCompatActivity {
         String bookName = "";
         String bookAuthor = "";
         String bookPublisher = "";
-        //String bookDescription = "";
+        String bookDescription = "";
         String imageResource = "";
         try {
             JSONArray jsonArray = response.getJSONArray("items");
+            Log.d(TAG, "showData: " + jsonArray.length());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject itemJsonObject = jsonArray.getJSONObject(i);
                 JSONObject volumeObject = itemJsonObject.getJSONObject("volumeInfo");
-                JSONObject imageObject = volumeObject.getJSONObject("imageLinks");
-                bookName = volumeObject.getString("title");
-                bookPublisher = volumeObject.getString("publisher");
-                // bookDescription=volumeObject.getString("description");
-                JSONArray authorsArray = volumeObject.getJSONArray("authors");
-                bookAuthor = authorsArray.getString(0);
-                imageResource = imageObject.getString("thumbnail");
-                //Log.d(TAG, "showData: "+image);
+                try {
+                    bookName = volumeObject.getString("title");
+                    bookPublisher = volumeObject.getString("publisher");
+                    JSONArray authorsArray = volumeObject.getJSONArray("authors");
+                    bookAuthor = authorsArray.getString(0);
+                    bookDescription = volumeObject.getString("description");
 
-                Log.d(TAG, "showData: name->" + bookName + " author->" + bookAuthor + " publisher->" + bookPublisher);
-                mBooks.add(new BookItem(bookName, bookAuthor, bookPublisher,imageResource));
+                } catch (Exception e) {
+                    Log.d(TAG, "showData: "+e.getMessage());
+                }
+                //put link string outside try catch of normal string
+                JSONObject imageObject = volumeObject.getJSONObject("imageLinks");
+                imageResource = imageObject.getString("thumbnail");
+                mBooks.add(new BookItem(bookName, bookAuthor, bookPublisher, imageResource, bookDescription));
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -130,4 +143,6 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new BookAdapter(mBooks, MainActivity.this);
         mRecyclerView.setAdapter(mAdapter);
     }
+
+
 }

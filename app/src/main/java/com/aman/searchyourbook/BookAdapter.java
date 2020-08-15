@@ -18,7 +18,11 @@ import com.squareup.picasso.Picasso;
 import java.text.MessageFormat;
 import java.util.List;
 
+
+
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
+
+    public static final String TAG=BookAdapter.class.getSimpleName();
 
     private List<BookItem> bookList;
     private Context context;
@@ -59,6 +63,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d(TAG, "getItemCount: "+bookList.size());
         return bookList.size();
     }
 
@@ -75,7 +80,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             textViewTitle = itemView.findViewById(R.id.txtTitle);
             textViewAuthor = itemView.findViewById(R.id.txtAuthor);
             textViewPublication = itemView.findViewById(R.id.txtPublisher);
-            imageView=itemView.findViewById(R.id.imgThumbnail);
+            imageView=itemView.findViewById(R.id.imageView);
+
+
         }
 
 
